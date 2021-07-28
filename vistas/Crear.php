@@ -60,7 +60,7 @@ $model = new UsuarioModel();
             <div class="form-group ">
                 <label for="inputEmail3" class="col-sm-2 col-form-label">Fecha de Nacimiento</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="FechaNacimiento" name="FechaNacimiento" required minlength="3" maxlength="6">
+                    <input type="text" class="form-control" id="FechaNacimiento" name="FechaNacimiento" required minlength="3" >
                 </div>
             </div>
         </div>

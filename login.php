@@ -16,14 +16,16 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $correo = trim($_POST["correo"]);
     }
     
- 
+    // Check if password is empty
     if(empty(trim($_POST["password"]))){
         $password_err = "Por favor ingrese su contraseña.";
     } else{
         $password = trim($_POST["password"]);
     }
-
+    
+    // Validate credentials
     if(empty($correo_err) && empty($password_err)){
+        // Prepare a select statement
         $sql = "SELECT id, correo, password FROM Usuarios WHERE correo = ?";
         
         if($stmt = mysqli_prepare($link, $sql)){
@@ -42,31 +44,35 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     mysqli_stmt_bind_result($stmt, $id, $correo, $hashed_password);
                     if(mysqli_stmt_fetch($stmt)){
                         if(password_verify($password, $hashed_password)){
+                            // Password is correct, so start a new session
                             session_start();
-                          
+                            
+                            // Store data in session variables
                             $_SESSION["loggedin"] = true;
                             $_SESSION["id"] = $id;
                             $_SESSION["correo"] = $correo;                            
                             
-                            
+                            // Redirect user to welcome page
                             header("location: vistas/listar.php");
                         } else{
-                            
+                            // Display an error message if password is not valid
                             $password_err = "La contraseña que has ingresado no es válida.";
                         }
                     }
                 } else{
-                  
+                    // Display an error message if correo doesn't exist
                     $correo_err = "No existe cuenta registrada con ese nombre de usuario.";
                 }
             } else{
                 echo "Algo salió mal, por favor vuelve a intentarlo.";
             }
         }
-
+        
+        // Close statement
         mysqli_stmt_close($stmt);
     }
     
+    // Close connection
     mysqli_close($link);
 }
 ?>
@@ -100,6 +106,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" value="Ingresar">
             </div>
+            <p>¿No tienes una cuenta? <a href="vistas/crear.php">Regístrate ahora</a>.</p>
         </form>
     </div>    
 </body>
